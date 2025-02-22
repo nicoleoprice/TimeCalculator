@@ -24,6 +24,7 @@ public class TimeList<Time> {
         //check if list is empty
         if(current == null) {
             this.head = newHead;
+            return newHead;
         }
 
         //find last node
@@ -76,6 +77,9 @@ public class TimeList<Time> {
 
             toPrint = toPrint.next;
         }
+
+        //append null at the end
+        sb.append("NULL");
 
         return sb.toString();
     }
