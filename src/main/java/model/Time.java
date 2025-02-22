@@ -38,4 +38,9 @@ public class Time {
     public void setSeconds(int seconds) {
         this.seconds = seconds;
     }
+
+    @Override
+    public String toString() {
+        return String.format("{%02d : %02d : %02d}", hours, minutes, seconds);
+    }
 }
