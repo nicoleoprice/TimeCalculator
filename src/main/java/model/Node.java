@@ -3,13 +3,13 @@ package model;
 /**
  * This is the node setup for the singly linked list
  * Singly linked lists move in one direction, so there is only one pointer (next)
- * @param <T>
+ * @param <Time>
  */
-public class Node<T> {
-    public T data;
-    public Node<T> next;
+public class Node<Time> {
+    public Time data;
+    public Node<Time> next;
 
-    public Node (T data) {
+    public Node (Time data) {
         this.data = data;
         this.next = null;
     }

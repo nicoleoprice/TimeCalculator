@@ -5,9 +5,17 @@ package model;
  */
 
 public class Time {
-    public int hours;
-    public int minutes;
-    public int seconds;
+    private int hours;
+    private int minutes;
+    private int seconds;
+
+    //default constructor so table does not look empty
+    public Time() {
+        hours = 0;
+        minutes = 0;
+        seconds = 0;
+    }
+
 
     public Time(int hours, int minutes, int seconds) {
         this.hours = hours;
