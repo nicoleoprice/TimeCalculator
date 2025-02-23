@@ -3,7 +3,7 @@ package model;
 /**
  * The TimeList is a singly-linked list
  */
-public class TimeList<Time> {
+public class TimeList<Time>{
     public Node<Time> head;
 
     //constructor
@@ -39,26 +39,36 @@ public class TimeList<Time> {
     }
 
     //delete (skip over)
-    public Node<Time> deleteData(Time data) {
+    public Node<Time> deleteData(int location) {
         Node<Time> current = this.head;
         Node<Time> toDelete = null;
+        int currentLocation = 0;
 
-        if(current.data.equals(data)) {
-            toDelete = current;
-            current = current.next;
+        //check if list is empty
+        if(current == null) {
+            if(location != 0) {
+                throw new NullPointerException("This list is empty!");
+            } else {
+                return toDelete;
+            }
+        }
+
+        if(currentLocation == location) {
+            toDelete = this.head;
+            this.head = this.head.next;
             return toDelete;
         }
 
-        while(current.next != null) {
-            if(current.next.data.equals(data)) {
-
-                //skip the node
-                current.next = toDelete.next;
-                toDelete.next = null;
-                return toDelete;
-            }
-            //move pointer
+        //loop until location is reached
+        while(current.next != null && currentLocation < location - 1) {
             current = current.next;
+            currentLocation++;
+        }
+
+        //since toDelete is already null initially, no need to check if current node is null
+        if(current.next != null) {
+            toDelete = current;
+            current.next = current.next.next;
         }
 
         return toDelete;
