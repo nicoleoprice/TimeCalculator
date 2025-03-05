@@ -9,6 +9,10 @@ public class TimeCalculations {
         //total is a global variable since both methods utilize the information in total
         Time total = new Time();
 
+        public TimeCalculations(TimeList<Time> timesToAdd) {
+            this.timesToAdd = timesToAdd;
+        }
+
      public Time toAdd(TimeList<Time> timesToAdd) {
 
          //loop through each time and add the seconds, minutes, and hours to each
@@ -16,9 +20,11 @@ public class TimeCalculations {
              total.setSeconds(total.getSeconds() + timesToAdd.head.data.getSeconds());
              total.setMinutes(total.getMinutes() + timesToAdd.head.data.getMinutes());
              total.setHours(total.getHours() + timesToAdd.head.data.getHours());
+
+             timesToAdd.head = timesToAdd.head.next;
          }
 
-         //convert the seconds and minutes
+         //convert the seconds and minutes and updates total
          total = convertTime(total.getMinutes(), total.getSeconds(), true);
          total = convertTime(total.getHours(), total.getMinutes(), false);
 
@@ -61,5 +67,7 @@ public class TimeCalculations {
                 }
 
             }
+
+            return total;
     }
 }
