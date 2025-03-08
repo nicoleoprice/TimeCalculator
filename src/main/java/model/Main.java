@@ -3,6 +3,7 @@ package model;
 import javafx.application.Application;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -32,7 +33,9 @@ public class Main extends Application {
     TextField secondsInput;
     TextField hoursTotal, minutesTotal, secondsTotal;
     TableView<Time> table;
-    TimeList<Time> timeList = new TimeList<>();
+
+    //these are global variables to prevent erasing the existing table and instantiating a new linked list for calculations (it would not include existing data)
+    //TimeList<Time> timeList = new TimeList<>();
 
     public static void main(String[] args) {
         launch(args);
@@ -109,6 +112,10 @@ public class Main extends Application {
         Button add = new Button("Add");
         add.setOnAction(e -> addButtonClicked());
 
+        //delete button and functionality
+        Button delete = new Button("Delete");
+        delete.setOnAction(e -> deleteButtonClicked());
+
         //create HBox (horizontal row) and add spacing
         HBox inputBox = new HBox();
         inputBox.setPadding(new Insets(20, 5, 20, 5));
@@ -121,7 +128,7 @@ public class Main extends Application {
         HBox.setHgrow(start, Priority.ALWAYS);
         HBox.setHgrow(end, Priority.ALWAYS);
 
-        inputBox.getChildren().addAll(start, hoursInput, colonOne, minutesInput, colonTwo, secondsInput, region, add, end);
+        inputBox.getChildren().addAll(start, hoursInput, colonOne, minutesInput, colonTwo, secondsInput, region, add, end, delete);
         //End of add data
 
 
@@ -195,7 +202,9 @@ public class Main extends Application {
 
         //add Time object to table and linked list
         table.getItems().add(newTime);
-        timeList.appendData(newTime);
+        getTimeList().appendData(newTime);
+
+        System.out.println(getTimeList().toString());
 
         //clear input fields
         hoursInput.clear();
@@ -203,15 +212,47 @@ public class Main extends Application {
         secondsInput.clear();
     }
 
+    public void deleteButtonClicked() {
+        ObservableList<Time> allTimes = table.getItems();
+        int toDeleteIndex = table.getSelectionModel().getSelectedIndex();
+
+        //remove selected from the total list of Times in the table
+        allTimes.remove(toDeleteIndex);
+        table.getSelectionModel().clearSelection();
+
+        //delete from linked list
+        getTimeList().deleteData(toDeleteIndex);
+        System.out.println(getTimeList().toString());
+    }
+
     public void calculateButtonClicked() {
         //parse linked list to calculations
-        TimeCalculations calculateTotal = new TimeCalculations(timeList);
-        Time total = calculateTotal.toAdd(this.timeList);
+        TimeCalculations calculateTotal = new TimeCalculations(getTimeList());
+        Time total = calculateTotal.toAdd();
+
 
         //display the totals
         hoursTotal.setText(String.valueOf(total.getHours()));
         minutesTotal.setText(String.valueOf(total.getMinutes()));
         secondsTotal.setText(String.valueOf(total.getSeconds()));
+    }
 
+    /**
+     * If the timeList was a global variable, the timeList would be rewritten as an empty list after calculations.
+     * If this code block was placed after the calculations, then the calculate button would add to the existing list doubling total within the table
+     * It would be redundant to get the information from the displayed table and put it in a linked list
+     *
+     * The linked list is necessary for the calculations portion
+     * @return current table's information as a linked list
+     */
+    public TimeList<Time> getTimeList() {
+        ObservableList<Time> currentList = table.getItems();
+        TimeList<Time> timeList = new TimeList<>();
+
+        for (Time time : currentList) {
+            timeList.appendData(time);
+        }
+
+        return timeList;
     }
 }
