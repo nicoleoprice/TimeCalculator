@@ -1,6 +1,11 @@
 package model;
 
 import javafx.application.Application;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
+import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -27,6 +32,8 @@ public class Main extends Application {
     TextField minutesInput;
     TextField secondsInput;
     TextField hoursTotal, minutesTotal, secondsTotal;
+    TableView<Time> table;
+    TimeList<Time> timeList = new TimeList<>();
 
     public static void main(String[] args) {
         launch(args);
@@ -37,7 +44,7 @@ public class Main extends Application {
         stage.setTitle("Time Calculator");
 
         /////Create Table
-        TableView<Time> table = new TableView<>();
+        table = new TableView<Time>();
 
         //columns
         TableColumn<Time, Integer> hoursColumn = new TableColumn<>("Hours");
@@ -59,10 +66,10 @@ public class Main extends Application {
         //End of Create Table
 
 
-        //Add data
-        hoursInput = new TextField();
-        minutesInput = new TextField();
-        secondsInput = new TextField();
+        //Add data, text fields have default values to avoid null
+        hoursInput = new TextField("00");
+        minutesInput = new TextField("00");
+        secondsInput = new TextField("00");
         Text colonOne = new Text(" : ");
         Text colonTwo = new Text(" : ");
         colonOne.resize(10, 18);
@@ -72,10 +79,36 @@ public class Main extends Application {
         secondsInput.setPrefWidth(100);
 
         //allow only numbers to be inputted
-        hoursInput.setTextFormatter(new TextFormatter<>(new IntegerStringConverter()));
+        hoursInput.textProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observableValue, String s, String t1) {
+                if(!t1.matches("\\d*")) {
+                    hoursInput.setText(t1.replaceAll("[^//d]", ""));
+                }
+            }
+        });
 
-        //create button
+        minutesInput.textProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observableValue, String s, String t1) {
+                if(!t1.matches("\\d*")) {
+                    minutesInput.setText(t1.replaceAll("[^//d]", ""));
+                }
+            }
+        });
+
+        secondsInput.textProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observableValue, String s, String t1) {
+                if(!t1.matches("\\d*")) {
+                    secondsInput.setText(t1.replaceAll("[^//d]", ""));
+                }
+            }
+        });
+
+        //add button and functionality
         Button add = new Button("Add");
+        add.setOnAction(e -> addButtonClicked());
 
         //create HBox (horizontal row) and add spacing
         HBox inputBox = new HBox();
@@ -112,6 +145,7 @@ public class Main extends Application {
 
         //calculate button
         Button calculate = new Button("Calculate");
+        calculate.setOnAction(e -> calculateButtonClicked());
 
         HBox totalBox = new HBox();
         totalBox.setPadding(new Insets(20, 5, 20, 5));
@@ -138,5 +172,46 @@ public class Main extends Application {
         stage.show();
     }
 
+    public void addButtonClicked() {
+        //create new Time object
+        Time newTime = new Time();
 
+        //set value to 0 if is blank
+        if(hoursInput.getText().isBlank() || minutesInput.getText().isBlank() || secondsInput.getText().isBlank()) {
+            if(hoursInput.getText().isBlank()) {
+                newTime.setHours(0);
+            }
+            if(minutesInput.getText().isBlank()) {
+                newTime.setMinutes(0);
+            }
+            if(minutesInput.getText().isBlank()) {
+                newTime.setMinutes(0);
+            }
+        }
+
+        newTime.setHours(Integer.parseInt(hoursInput.getText()));
+        newTime.setMinutes(Integer.parseInt(minutesInput.getText()));
+        newTime.setSeconds(Integer.parseInt(secondsInput.getText()));
+
+        //add Time object to table and linked list
+        table.getItems().add(newTime);
+        timeList.appendData(newTime);
+
+        //clear input fields
+        hoursInput.clear();
+        minutesInput.clear();
+        secondsInput.clear();
+    }
+
+    public void calculateButtonClicked() {
+        //parse linked list to calculations
+        TimeCalculations calculateTotal = new TimeCalculations(timeList);
+        Time total = calculateTotal.toAdd(this.timeList);
+
+        //display the totals
+        hoursTotal.setText(String.valueOf(total.getHours()));
+        minutesTotal.setText(String.valueOf(total.getMinutes()));
+        secondsTotal.setText(String.valueOf(total.getSeconds()));
+
+    }
 }
