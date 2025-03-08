@@ -3,12 +3,12 @@ package model;
 import javafx.application.Application;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
-import javafx.collections.FXCollections;
-import javafx.collections.ListChangeListener;
-import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
@@ -17,7 +17,6 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
-import javafx.util.converter.IntegerStringConverter;
 
 
 /**
@@ -176,21 +175,22 @@ public class Main extends Application {
         //create new Time object
         Time newTime = new Time();
 
-        //set value to 0 if is blank
-        if(hoursInput.getText().isBlank() || minutesInput.getText().isBlank() || secondsInput.getText().isBlank()) {
-            if(hoursInput.getText().isBlank()) {
-                newTime.setHours(0);
-            }
-            if(minutesInput.getText().isBlank()) {
-                newTime.setMinutes(0);
-            }
-            if(minutesInput.getText().isBlank()) {
-                newTime.setMinutes(0);
-            }
+        //set hours value to 0 if blank, then set the hours to the Time object hours
+        if(hoursInput.getText().isBlank()) {
+            hoursInput.setText("00");
         }
-
         newTime.setHours(Integer.parseInt(hoursInput.getText()));
+
+        //set minutes value to 0 if blank, then set the minutes to Time object minutes
+        if(minutesInput.getText().isBlank()) {
+            minutesInput.setText("00");
+        }
         newTime.setMinutes(Integer.parseInt(minutesInput.getText()));
+
+        //set seconds to 0 if blank, then set the seconds to Time object seconds
+        if(secondsInput.getText().isBlank()) {
+            secondsInput.setText("00");
+        }
         newTime.setSeconds(Integer.parseInt(secondsInput.getText()));
 
         //add Time object to table and linked list
