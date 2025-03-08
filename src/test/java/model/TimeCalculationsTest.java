@@ -96,7 +96,7 @@ class TimeCalculationsTest {
         list.appendData(testOne);
         TimeCalculations tc = new TimeCalculations(list);
 
-        tc.toAdd(list);
+        tc.toAdd();
         Time actualTime = tc.total;
 
         assertEquals("{02 : 07 : 15}", actualTime.toString());
@@ -112,7 +112,7 @@ class TimeCalculationsTest {
         list.appendData(testOne);
         TimeCalculations tc = new TimeCalculations(list);
 
-        tc.toAdd(list);
+        tc.toAdd();
         Time actualTime = tc.total;
 
         assertEquals("{10 : 04 : 45}", actualTime.toString());
@@ -127,7 +127,7 @@ class TimeCalculationsTest {
         list.appendData(testTwo);
         TimeCalculations tc = new TimeCalculations(list);
 
-        tc.toAdd(list);
+        tc.toAdd();
         Time actualTime = tc.total;
 
         assertEquals("{10 : 10 : 00}", actualTime.toString());
@@ -144,7 +144,7 @@ class TimeCalculationsTest {
         list.appendData(testThree);
         TimeCalculations tc = new TimeCalculations(list);
 
-        tc.toAdd(list);
+        tc.toAdd();
         Time actualTime = tc.total;
 
         assertEquals("{122 : 20 : 20}", actualTime.toString());
@@ -155,7 +155,7 @@ class TimeCalculationsTest {
         TimeList<Time> list = new TimeList<>();
         TimeCalculations tc = new TimeCalculations(list);
 
-        tc.toAdd(list);
+        tc.toAdd();
         Time actualTime = tc.total;
 
         assertEquals("{00 : 00 : 00}", actualTime.toString());

@@ -13,7 +13,7 @@ public class TimeCalculations {
             this.timesToAdd = timesToAdd;
         }
 
-     public Time toAdd(TimeList<Time> timesToAdd) {
+     public Time toAdd() {
 
          //loop through each time and add the seconds, minutes, and hours to each
          while(timesToAdd.head != null) {
